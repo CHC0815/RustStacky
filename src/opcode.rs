@@ -1,4 +1,4 @@
-#[derivce(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Opcode {
     NUMBER,
     ADD,
