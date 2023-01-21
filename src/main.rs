@@ -1,5 +1,7 @@
 mod opcode;
 mod lexer;
+mod parser;
+mod stack_machine;
 
 use std::fs::{self, read_to_string};
 
