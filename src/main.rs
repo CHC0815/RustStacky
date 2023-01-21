@@ -1,9 +1,9 @@
-mod opcode;
+// mod opcode;
 mod lexer;
 mod parser;
 // mod stack_machine;
 
-use std::fs::{read_to_string};
+use std::fs::read_to_string;
 
 fn main() {
     // read file input as text and print it

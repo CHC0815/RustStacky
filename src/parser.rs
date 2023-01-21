@@ -1,6 +1,6 @@
 use core::panic;
 
-use crate::lexer::Token;
+use crate::lexer::{Token, is_keyword};
 
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) enum Ast {
@@ -90,7 +90,11 @@ impl<'a> Parser<'a> {
                     expressions.push(Ast::Operation(Token::DoubleEq));
                 },
                 Token::Identifier(ref name) => {
-                    expressions.push(Ast::FunctionCall(name.clone()));
+                    if is_keyword(&name) {
+                        expressions.push(self.parse_keyword(name.clone()))
+                    }else {
+                        expressions.push(Ast::FunctionCall(name.clone()));
+                    }
                 },
                 Token::SemiColon => {
                     panic!("Unexpected semicolon");
@@ -183,5 +187,27 @@ impl<'a> Parser<'a> {
             name: func_name,
             body: body,
         }
+    }
+
+    fn parse_if(&mut self) -> Ast {
+        todo!();
+    }
+
+    fn parse_keyword(&mut self, keyword: String) -> Ast {
+        match keyword.as_str() {
+            "if" => {
+                return self.parse_if();
+            },
+            "LOOP" => {
+                return self.parse_loop();
+            }
+            _ => {
+                panic!("Unexpected keyword");
+            }
+        }
+    }
+
+    fn parse_loop(&self) -> Ast {
+        todo!()
     }
 }
