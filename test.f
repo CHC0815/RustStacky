@@ -1,1 +1,1 @@
-1 2 "Test" puts .
+:Test 1 2 + .;
