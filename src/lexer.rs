@@ -20,6 +20,8 @@ pub(crate) enum Token {
     Gte,
     Eq,
     DoubleEq,
+    Colon,
+    SemiColon,
 }
 
 pub(crate) struct Lexer<'a> {
@@ -73,7 +75,9 @@ impl<'a> Lexer<'a> {
                 '*' => return Some(Token::Mul),
                 '/' => return Some(Token::Div),
                 '.' => return Some(Token::Emit),
-                _ => return None,
+                ':' => return Some(Token::Colon),
+                ';' => return Some(Token::SemiColon),
+                _ => {},
             }
         }
 
