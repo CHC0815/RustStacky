@@ -1,5 +1,5 @@
 [package]
-name = "RustStacky"
+name = "rust_stacky"
 version = "0.1.0"
 edition = "2021"
 
