@@ -1,7 +1,7 @@
 use std::iter::Peekable;
 use std::str::Chars;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub(crate) enum Token {
     Number(i32),
     StringLiteral(String),
@@ -11,9 +11,12 @@ pub(crate) enum Token {
     Mul,
     Div,
     Emit,
+    If,
     Dup,
     Swap,
     Drop,
+    Else,
+    Then,
     Lt,
     Gt,
     Lte,
@@ -122,6 +125,17 @@ impl<'a> Lexer<'a> {
             } else {
                 break;
             }
+        }
+
+        // check if the identifier is a keyword
+        match identifier.as_str() {
+            "if" => return Token::If,
+            "else" => return Token::Else,
+            "then" => return Token::Then,
+            "dup" => return Token::Dup,
+            "swap" => return Token::Swap,
+            "drop" => return Token::Drop,
+            _ => {}
         }
         Token::Identifier(identifier)
     }
