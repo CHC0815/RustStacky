@@ -57,20 +57,12 @@ impl<'a> Lexer<'a> {
                 return Some(self.identifier());
             }
 
-            if c == '"' {
-                return Some(self.string());
-            }
-
-            if c == '>' {
-                return Some(self.greater_than());
-            }
-
-            if c == '<' {
-                return Some(self.less_than());
-            }
-
-            if c == '=' {
-                return Some(self.equal());
+            match c {
+                '"' => return Some(self.string()),
+                '>' => return Some(self.greater_than()),
+                '<' => return Some(self.less_than()),
+                '=' => return Some(self.equal()),
+                _ => {}
             }
 
             // parse single character tokens
