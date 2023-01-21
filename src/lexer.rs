@@ -16,7 +16,10 @@ pub(crate) enum Token {
     Drop,
     Lt,
     Gt,
+    Lte,
+    Gte,
     Eq,
+    DoubleEq,
 }
 
 pub(crate) struct Lexer<'a> {
@@ -56,6 +59,18 @@ impl<'a> Lexer<'a> {
 
             if c == '"' {
                 return Some(self.string());
+            }
+
+            if c == '>' {
+                return Some(self.greater_than());
+            }
+
+            if c == '<' {
+                return Some(self.less_than());
+            }
+
+            if c == '=' {
+                return Some(self.equal());
             }
 
             // parse single character tokens
@@ -114,5 +129,38 @@ impl<'a> Lexer<'a> {
         }
         Token::Identifier(identifier)
     }
-    
+
+    fn greater_than(&mut self) -> Token {
+        self.chars.next(); // consume the initial >
+        if let Some(&c) = self.chars.peek() {
+            if c == '=' {
+                self.chars.next(); // consume the =
+                return Token::Gte;
+            }
+        }
+        Token::Gt
+    }
+
+    fn less_than(&mut self) -> Token {
+        self.chars.next(); // consume the initial <
+        if let Some(&c) = self.chars.peek() {
+            if c == '=' {
+                self.chars.next(); // consume the =
+                return Token::Lte;
+            }
+        }
+        Token::Lt
+    }
+
+    fn equal(&mut self) -> Token {
+        self.chars.next(); // consume the initial =
+        if let Some(&c) = self.chars.peek() {
+            if c == '=' {
+                self.chars.next(); // consume the =
+                return Token::DoubleEq;
+            }
+        }
+        Token::Eq
+    }
+
 }
