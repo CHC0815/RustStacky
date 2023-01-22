@@ -12,6 +12,7 @@ fn main() {
 
     let tokens = lexer::Lexer::lex(&input);
     let ast = parser::Parser::new(&tokens).parse();
-    
     println!("{:#?}", ast);
+    let mut interprete = interpreter::Interpreter::new();
+    interprete.interpret(&ast);
 }

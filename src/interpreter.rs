@@ -1,4 +1,4 @@
-use crate::stack_machine::StackMachine;
+use crate::stack_machine::{StackMachine, Entity};
 use crate::parser::Ast;
 
 pub(crate) struct Interpreter {
@@ -13,6 +13,21 @@ impl Interpreter {
     }
 
     pub(crate) fn interpret(&mut self, ast: &Ast) {
-        
+        match ast {
+            Ast::Number(x) => self.stackMachine.push(Entity::Number(x.clone())),
+            Ast::Operation(op) => self.stackMachine.execute(op),
+            Ast::Expressions(nodes) => {
+                for node in nodes {
+                    self.interpret(node);
+                }
+            }
+            // Ast::WordDefinition (ref name, body: Vec<Ast>) => {
+
+            // }
+            Ast::FunctionCall(ref name) => {
+
+            }
+            _ => {}
+        }
     }
 }
