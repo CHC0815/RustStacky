@@ -90,7 +90,7 @@ impl<'a> Lexer<'a> {
                 '.' => return Some(Token::Emit),
                 ':' => return Some(Token::Colon),
                 ';' => return Some(Token::SemiColon),
-                _ => {},
+                _ => {}
             }
         }
 
@@ -185,5 +185,4 @@ impl<'a> Lexer<'a> {
         }
         Token::Eq
     }
-
 }

@@ -1,6 +1,6 @@
 use core::panic;
 
-use crate::lexer::{Token, is_keyword};
+use crate::lexer::{is_keyword, Token};
 
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) enum Ast {
@@ -71,7 +71,7 @@ impl<'a> Parser<'a> {
             Token::If => self.get_if(),
             Token::SemiColon => {
                 panic!("Unexpected semicolon")
-            },
+            }
             _ => panic!("Not yet implemented {:?}", token),
         }
     }
@@ -79,7 +79,7 @@ impl<'a> Parser<'a> {
     fn get_if(&mut self) -> Ast {
         let mut if_body = vec![];
         let mut else_body = vec![];
-        
+
         let mut token = self.tokens[self.pos].clone();
         while token != Token::Then && token != Token::Else {
             if_body.push(self.get_node(token.clone()));
@@ -94,7 +94,7 @@ impl<'a> Parser<'a> {
             }
         }
         self.advance(); // advance past then
-        
+
         Ast::If { if_body, else_body }
     }
 
@@ -112,7 +112,7 @@ impl<'a> Parser<'a> {
         }
         self.advance(); // advance past identifier
         token.clone_from(&self.tokens[self.pos]);
-        
+
         while token != Token::SemiColon {
             body.push(self.get_node(token.clone()));
             token.clone_from(&self.tokens[self.pos]);
@@ -120,5 +120,4 @@ impl<'a> Parser<'a> {
         self.advance(); // advance past semicolon
         Ast::WordDefinition { name, body }
     }
-
 }
