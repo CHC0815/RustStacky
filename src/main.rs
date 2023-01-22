@@ -1,8 +1,8 @@
-// mod opcode;
 mod lexer;
 mod parser;
 mod interpreter;
 mod stack_machine;
+mod context;
 
 use std::fs::read_to_string;
 
@@ -14,5 +14,5 @@ fn main() {
     let ast = parser::Parser::new(&tokens).parse();
     println!("{:#?}", ast);
     let mut interprete = interpreter::Interpreter::new();
-    interprete.interpret(&ast);
+    interprete.run(&ast);
 }
