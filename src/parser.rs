@@ -99,13 +99,13 @@ impl<'a> Parser<'a> {
 
     fn get_word(&mut self) -> Ast {
         let mut body = vec![];
-        let name;
+        let mut name: String = "undefined".to_string();
         let mut token = self.tokens[self.pos].clone();
         if let Token::Identifier(ref x) = token {
             if is_keyword(x) {
                 panic!("Cannot use keyword as identifier");
             }
-            name = x.clone();
+            name.clone_from(&x);
         } else {
             panic!("Expected identifier");
         }
