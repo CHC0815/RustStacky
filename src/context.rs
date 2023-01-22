@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::parser::Ast;
 
+#[derive(Debug, Clone)]
 pub(crate) struct Context {
     parent: Option<Box<Context>>,
     words: HashMap<String, Vec<Ast>>,
@@ -30,4 +31,5 @@ impl Context {
     pub(crate) fn set(&mut self, name: String, body: Vec<Ast>) {
         self.words.insert(name, body);
     }
+
 }

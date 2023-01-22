@@ -1,3 +1,4 @@
 /target
 /bin
 coverage.info
+/debug
