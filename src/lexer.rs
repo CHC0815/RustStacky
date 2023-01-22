@@ -27,6 +27,7 @@ pub(crate) enum Token {
     DoubleEq,
     Colon,
     SemiColon,
+    Puts,
     EOF,
 }
 
@@ -146,6 +147,7 @@ impl<'a> Lexer<'a> {
             "DROP" => return Token::Drop,
             "DO" => return Token::Do,
             "LOOP" => return Token::Loop,
+            "PUTS" => return Token::Puts,
             _ => {}
         }
         Token::Identifier(identifier)

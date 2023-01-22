@@ -233,6 +233,25 @@ impl StackMachine {
                     None => panic!("Not enough items on stack to drop"),
                 }
             },
+            Token::Puts => {
+                let length = self.pop();
+                match length {
+                    Some(Entity::Number(length)) => {
+                        let mut string = String::new();
+                        for _ in 0..length {
+                            let c = self.pop();
+                            match c {
+                                Some(Entity::Number(c)) => {
+                                    string.push(c as u8 as char);
+                                },
+                                _ => panic!("Cannot puts non-number"),
+                            }
+                        }
+                        print!("{}", string.chars().rev().collect::<String>());
+                    },
+                    _ => panic!("Cannot puts non-number"),
+                }
+            }
             _ => panic!("Cannot execute token: {:?}", op),
         }
     }

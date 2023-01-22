@@ -63,6 +63,7 @@ impl<'a> Parser<'a> {
             Token::Dup => Ast::Operation(Token::Dup),
             Token::Swap => Ast::Operation(Token::Swap),
             Token::Drop => Ast::Operation(Token::Drop),
+            Token::Puts => Ast::Operation(Token::Puts),
             Token::Eq => Ast::Operation(Token::Eq),
             Token::StringLiteral(ref x) => Ast::StringLiteral(x.clone()),
             Token::Identifier(ref x) => Ast::FunctionCall(x.clone()),

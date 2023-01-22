@@ -1,3 +1,3 @@
-:test 1 2 + ;
+:test 1 DUP + ;
 test .
-"Hello World" .
+"Hello World" PUTS

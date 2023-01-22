@@ -35,7 +35,13 @@ impl Interpreter {
                 let body = context.get(name.clone());
                 self.interpret(&Ast::Expressions(body), context);
             }
-            Ast::StringLiteral(x) => self.stack_machine.push(Entity::String(x.clone())),
+            Ast::StringLiteral(x) => {
+                let length = x.len();
+                for i in 0..length {
+                    self.stack_machine.push(Entity::Number(x.chars().nth(i).unwrap() as i32));
+                }
+                self.stack_machine.push(Entity::Number(length as i32));
+            },
             _ => {}
         }
     }
