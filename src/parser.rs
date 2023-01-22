@@ -82,14 +82,14 @@ impl<'a> Parser<'a> {
         let mut token = self.tokens[self.pos].clone();
         while token != Token::Then && token != Token::Else {
             if_body.push(self.get_node(token.clone()));
-            token = self.tokens[self.pos].clone();
+            token.clone_from(&self.tokens[self.pos])
         }
         if token == Token::Else {
             self.advance(); // advance past else
-            token = self.tokens[self.pos].clone();
+            token.clone_from(&self.tokens[self.pos]);
             while token != Token::Then {
                 else_body.push(self.get_node(token.clone()));
-                token = self.tokens[self.pos].clone();
+                token.clone_from(&self.tokens[self.pos]);
             }
         }
         self.advance(); // advance past then
@@ -110,11 +110,11 @@ impl<'a> Parser<'a> {
             panic!("Expected identifier");
         }
         self.advance(); // advance past identifier
-        token = self.tokens[self.pos].clone();
+        token.clone_from(&self.tokens[self.pos]);
         
         while token != Token::SemiColon {
             body.push(self.get_node(token.clone()));
-            token = self.tokens[self.pos].clone();
+            token.clone_from(&self.tokens[self.pos]);
         }
         self.advance(); // advance past semicolon
         Ast::WordDefinition { name, body }
