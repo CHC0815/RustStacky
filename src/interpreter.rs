@@ -1,5 +1,5 @@
-use crate::stack_machine::{StackMachine, Entity};
 use crate::parser::Ast;
+use crate::stack_machine::{Entity, StackMachine};
 
 pub(crate) struct Interpreter {
     stackMachine: StackMachine,
@@ -24,9 +24,7 @@ impl Interpreter {
             // Ast::WordDefinition (ref name, body: Vec<Ast>) => {
 
             // }
-            Ast::FunctionCall(ref name) => {
-
-            }
+            Ast::FunctionCall(ref name) => {}
             _ => {}
         }
     }

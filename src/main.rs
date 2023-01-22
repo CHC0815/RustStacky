@@ -1,7 +1,7 @@
 // mod opcode;
+mod interpreter;
 mod lexer;
 mod parser;
-mod interpreter;
 mod stack_machine;
 
 use std::fs::read_to_string;
