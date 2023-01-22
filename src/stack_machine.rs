@@ -1,10 +1,11 @@
-use crate::lexer::Token;
+use crate::{lexer::Token, parser::Ast};
 
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) enum Entity {
     Number(i32),
     String(String),
     Pointer(u32),
+    Function(Ast),
 }
 
 pub(crate) struct StackMachine {
@@ -170,7 +171,7 @@ impl StackMachine {
                 let a = self.pop();
                 let b = self.pop();
                 match (a, b) {
-                    (Some(Entity::Number(a)) , Some(Entity::Number(0))) => {
+                    (Some(Entity::Number(_)) , Some(Entity::Number(0))) => {
                         panic!("Cannot divide by zero");
                     },
                     (Some(Entity::Number(a)), Some(Entity::Number(b))) => {
@@ -191,6 +192,13 @@ impl StackMachine {
                     },
                     Some(Entity::Pointer(a)) => {
                         print!("#{:X}", a);
+                    },
+                    Some(Entity::Function(a)) => {
+                        if let Ast::WordDefinition { name, body: _ } = a {
+                            print!("FUNC: {:?}", name);
+                        } else {
+                            panic!("Something went wrong");
+                        }
                     },
                     None => {
                         panic!("Not enough items on stack to emit");
