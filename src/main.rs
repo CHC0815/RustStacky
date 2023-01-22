@@ -1,15 +1,17 @@
+mod context;
+mod interpreter;
 mod lexer;
 mod parser;
-mod interpreter;
 mod stack_machine;
-mod context;
 
-use std::{fs::{read_to_string, File}, io::Write};
+use std::{
+    fs::{read_to_string, File},
+    io::Write,
+};
 
 fn main() {
     let emit_tokens = true;
     let emit_ast = true;
-
 
     // read file input as text and print it
     let input = read_to_string("test.f").unwrap();

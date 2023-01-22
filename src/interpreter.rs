@@ -1,6 +1,6 @@
 use crate::context::Context;
-use crate::stack_machine::{StackMachine, Entity};
 use crate::parser::Ast;
+use crate::stack_machine::{Entity, StackMachine};
 
 pub(crate) struct Interpreter {
     stack_machine: StackMachine,
