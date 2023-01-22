@@ -18,12 +18,10 @@ impl Context {
     pub(crate) fn get(&self, name: String) -> Vec<Ast> {
         match self.words.get(&name) {
             Some(word) => word.to_vec(),
-            None => {
-                match &self.parent {
-                    Some(parent) => parent.get(name),
-                    None => panic!("Word not found"),
-                }
-            }
+            None => match &self.parent {
+                Some(parent) => parent.get(name),
+                None => panic!("Word not found"),
+            },
         }
     }
 
