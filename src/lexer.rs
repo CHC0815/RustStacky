@@ -18,6 +18,8 @@ pub(crate) enum Token {
     Else,
     Then,
     Lt,
+    Do,
+    Loop,
     Gt,
     Lte,
     Gte,
@@ -25,10 +27,11 @@ pub(crate) enum Token {
     DoubleEq,
     Colon,
     SemiColon,
+    EOF,
 }
 
 pub(crate) fn is_keyword(word: &str) -> bool {
-    let keywords = vec!["IF", "ELSE", "THEN", "LOOP"];
+    let keywords = vec!["IF", "ELSE", "THEN", "LOOP", "DO"];
     keywords.contains(&word)
 }
 
@@ -49,6 +52,7 @@ impl<'a> Lexer<'a> {
         while let Some(token) = lexer.next_token() {
             tokens.push(token);
         }
+        tokens.push(Token::EOF);
         tokens
     }
 
@@ -134,12 +138,14 @@ impl<'a> Lexer<'a> {
 
         // check if the identifier is a keyword
         match identifier.as_str() {
-            "if" => return Token::If,
-            "else" => return Token::Else,
-            "then" => return Token::Then,
-            "dup" => return Token::Dup,
-            "swap" => return Token::Swap,
-            "drop" => return Token::Drop,
+            "IF" => return Token::If,
+            "ELSE" => return Token::Else,
+            "THEN" => return Token::Then,
+            "DUP" => return Token::Dup,
+            "SWAP" => return Token::Swap,
+            "DROP" => return Token::Drop,
+            "DO" => return Token::Do,
+            "LOOP" => return Token::Loop,
             _ => {}
         }
         Token::Identifier(identifier)

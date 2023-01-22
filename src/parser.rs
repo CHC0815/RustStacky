@@ -6,13 +6,17 @@ use crate::lexer::{Token, is_keyword};
 pub(crate) enum Ast {
     Number(i32),
     StringLiteral(String),
-    FunctionDefinition {
+    WordDefinition {
         name: String,
         body: Vec<Ast>,
     },
     Operation(Token),
     Expressions(Vec<Ast>),
     FunctionCall(String),
+    If {
+        if_body: Vec<Ast>,
+        else_body: Vec<Ast>,
+    },
 }
 
 pub(crate) struct Parser<'a> {
@@ -30,184 +34,90 @@ impl<'a> Parser<'a> {
     }
 
     pub(crate) fn parse(&mut self) -> Ast {
-        self.parse_expressions()
-    }
-    
-    fn parse_expressions(&mut self) -> Ast {
-        let mut expressions = vec![];
-        while self.pos < self.tokens.len() {
-            match self.tokens[self.pos] {
-                Token::Colon => {
-                    let function = self.parse_function();
-                    expressions.push(function);
-                },
-                Token::Number(x) => {
-                    expressions.push(Ast::Number(x));
-                },
-                Token::StringLiteral(ref x) => {
-                    expressions.push(Ast::StringLiteral(x.clone()));
-                },
-                Token::Add => {
-                    expressions.push(Ast::Operation(Token::Add));
-                },
-                Token::Sub => {
-                    expressions.push(Ast::Operation(Token::Sub));
-                },
-                Token::Mul => {
-                    expressions.push(Ast::Operation(Token::Mul));
-                },
-                Token::Div => {
-                    expressions.push(Ast::Operation(Token::Div));
-                },
-                Token::Emit => {
-                    expressions.push(Ast::Operation(Token::Emit));
-                },
-                Token::Dup => {
-                    expressions.push(Ast::Operation(Token::Dup));
-                },
-                Token::Swap => {
-                    expressions.push(Ast::Operation(Token::Swap));
-                },
-                Token::Drop => {
-                    expressions.push(Ast::Operation(Token::Drop));
-                },
-                Token::Lt => {
-                    expressions.push(Ast::Operation(Token::Lt));
-                },
-                Token::Gt => {
-                    expressions.push(Ast::Operation(Token::Gt));
-                },
-                Token::Lte => {
-                    expressions.push(Ast::Operation(Token::Lte));
-                },
-                Token::Gte => {
-                    expressions.push(Ast::Operation(Token::Gte));
-                },
-                Token::Eq => {
-                    expressions.push(Ast::Operation(Token::Eq));
-                },
-                Token::DoubleEq => {
-                    expressions.push(Ast::Operation(Token::DoubleEq));
-                },
-                Token::Identifier(ref name) => {
-                    if is_keyword(&name) {
-                        expressions.push(self.parse_keyword(name.clone()))
-                    }else {
-                        expressions.push(Ast::FunctionCall(name.clone()));
-                    }
-                },
-                Token::SemiColon => {
-                    panic!("Unexpected semicolon");
-                },
-                _ => {
-                    panic!("Unexpected token");
-                }
+        let mut nodes = vec![];
+
+        loop {
+            let token = self.tokens[self.pos].clone();
+            if token == Token::EOF {
+                break;
             }
-            
-            self.advance();
+            nodes.push(self.get_node(token));
         }
-        Ast::Expressions(expressions)
+
+        Ast::Expressions(nodes)
     }
 
-    fn parse_function(&mut self) -> Ast {
-        let func_name: String;
-        self.advance(); // advance past colon
-        if let Token::Identifier(ref name) = self.tokens[self.pos] {
-            func_name = name.clone();
+    fn _is_conditional(&mut self, token: Token) -> bool {
+        [Token::Gt, Token::Gte, Token::Lt, Token::Lte, Token::Eq].contains(&token)
+    }
+
+    fn get_node(&mut self, token: Token) -> Ast {
+        self.advance();
+        match token {
+            Token::Number(x) => Ast::Number(x),
+            Token::Add => Ast::Operation(Token::Add),
+            Token::Sub => Ast::Operation(Token::Sub),
+            Token::Emit => Ast::Operation(Token::Emit),
+            Token::Mul => Ast::Operation(Token::Mul),
+            Token::Div => Ast::Operation(Token::Div),
+            Token::Dup => Ast::Operation(Token::Dup),
+            Token::Swap => Ast::Operation(Token::Swap),
+            Token::Drop => Ast::Operation(Token::Drop),
+            Token::Eq => Ast::Operation(Token::Eq),
+            Token::StringLiteral(ref x) => Ast::StringLiteral(x.clone()),
+            Token::Identifier(ref x) => Ast::FunctionCall(x.clone()),
+            Token::Colon => self.get_word(),
+            Token::If => self.get_if(),
+            Token::SemiColon => {
+                panic!("Unexpected semicolon")
+            },
+            _ => panic!("Not yet implemented {:?}", token),
+        }
+    }
+
+    fn get_if(&mut self) -> Ast {
+        let mut if_body = vec![];
+        let mut else_body = vec![];
+        
+        let mut token = self.tokens[self.pos].clone();
+        while token != Token::Then && token != Token::Else {
+            if_body.push(self.get_node(token.clone()));
+            token = self.tokens[self.pos].clone();
+        }
+        if token == Token::Else {
+            self.advance(); // advance past else
+            token = self.tokens[self.pos].clone();
+            while token != Token::Then {
+                else_body.push(self.get_node(token.clone()));
+                token = self.tokens[self.pos].clone();
+            }
+        }
+        self.advance(); // advance past then
+        
+        Ast::If { if_body, else_body }
+    }
+
+    fn get_word(&mut self) -> Ast {
+        let mut body = vec![];
+        let name;
+        let mut token = self.tokens[self.pos].clone();
+        if let Token::Identifier(ref x) = token {
+            if is_keyword(x) {
+                panic!("Cannot use keyword as identifier");
+            }
+            name = x.clone();
         } else {
-            panic!("Expected identifier after colon");
+            panic!("Expected identifier");
         }
         self.advance(); // advance past identifier
-        let mut body = vec![];
-
-        while self.pos < self.tokens.len() {
-            match self.tokens[self.pos] {
-                Token::Number(x) => {
-                    body.push(Ast::Number(x));
-                },
-                Token::StringLiteral(ref x) => {
-                    body.push(Ast::StringLiteral(x.clone()));
-                },
-                Token::Add => {
-                    body.push(Ast::Operation(Token::Add));
-                },
-                Token::Sub => {
-                    body.push(Ast::Operation(Token::Sub));
-                },
-                Token::Mul => {
-                    body.push(Ast::Operation(Token::Mul));
-                },
-                Token::Div => {
-                    body.push(Ast::Operation(Token::Div));
-                },
-                Token::Emit => {
-                    body.push(Ast::Operation(Token::Emit));
-                },
-                Token::Dup => {
-                    body.push(Ast::Operation(Token::Dup));
-                },
-                Token::Swap => {
-                    body.push(Ast::Operation(Token::Swap));
-                },
-                Token::Drop => {
-                    body.push(Ast::Operation(Token::Drop));
-                },
-                Token::Lt => {
-                    body.push(Ast::Operation(Token::Lt));
-                },
-                Token::Gt => {
-                    body.push(Ast::Operation(Token::Gt));
-                },
-                Token::Lte => {
-                    body.push(Ast::Operation(Token::Lte));
-                },
-                Token::Gte => {
-                    body.push(Ast::Operation(Token::Gte));
-                },
-                Token::Eq => {
-                    body.push(Ast::Operation(Token::Eq));
-                },
-                Token::DoubleEq => {
-                    body.push(Ast::Operation(Token::DoubleEq));
-                },
-                Token::Identifier(ref name ) => {
-                    body.push(Ast::FunctionCall(name.clone()));
-                },
-                Token::SemiColon => {
-                    break;
-                },
-                _ => {
-                    panic!("Unexpected token in function body");
-                }
-            }
-            self.advance();
+        token = self.tokens[self.pos].clone();
+        
+        while token != Token::SemiColon {
+            body.push(self.get_node(token.clone()));
+            token = self.tokens[self.pos].clone();
         }
-
-        Ast::FunctionDefinition {
-            name: func_name,
-            body: body,
-        }
+        self.advance(); // advance past semicolon
+        Ast::WordDefinition { name, body }
     }
 
-    fn parse_if(&mut self) -> Ast {
-        todo!();
-    }
-
-    fn parse_keyword(&mut self, keyword: String) -> Ast {
-        match keyword.as_str() {
-            "if" => {
-                return self.parse_if();
-            },
-            "LOOP" => {
-                return self.parse_loop();
-            }
-            _ => {
-                panic!("Unexpected keyword");
-            }
-        }
-    }
-
-    fn parse_loop(&self) -> Ast {
-        todo!()
-    }
 }
