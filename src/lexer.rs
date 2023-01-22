@@ -97,7 +97,7 @@ impl<'a> Lexer<'a> {
     }
 
     fn number(&mut self) -> Token {
-        let mut number = String::new();
+        let mut number = String::default();
         while let Some(&c) = self.chars.peek() {
             if c.is_numeric() {
                 number.push(c);
@@ -112,7 +112,7 @@ impl<'a> Lexer<'a> {
 
     fn string(&mut self) -> Token {
         self.chars.next(); // consume the initial "
-        let mut string = String::new();
+        let mut string = String::default();
         while let Some(&c) = self.chars.peek() {
             if c == '"' {
                 self.chars.next(); // consume the final "
@@ -126,7 +126,7 @@ impl<'a> Lexer<'a> {
     }
 
     fn identifier(&mut self) -> Token {
-        let mut identifier = String::new();
+        let mut identifier = String::default();
         while let Some(&c) = self.chars.peek() {
             if c.is_ascii_alphanumeric() || c == '_' {
                 identifier.push(c);
