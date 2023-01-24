@@ -25,15 +25,17 @@ pub(crate) struct Parser<'a> {
 }
 
 impl<'a> Parser<'a> {
-    pub(crate) fn new(tokens: &'a [Token]) -> Parser<'a> {
-        Parser { tokens, pos: 0 }
+    pub(crate) fn new() -> Parser<'a> {
+        Parser { tokens: &vec!(), pos: 0 }
     }
 
     fn advance(&mut self) {
         self.pos += 1;
     }
 
-    pub(crate) fn parse(&mut self) -> Ast {
+    pub(crate) fn parse(&mut self, tokens: &'a [Token]) -> Ast {
+        self.tokens = tokens;
+        
         let mut nodes = vec![];
 
         loop {

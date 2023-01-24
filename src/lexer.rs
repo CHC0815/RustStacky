@@ -41,16 +41,16 @@ pub(crate) struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
-    fn new(input: &'a str) -> Lexer<'a> {
+    pub(crate) fn new() -> Lexer<'a> {
         Lexer {
-            chars: input.chars().peekable(),
+            chars: "".chars().peekable(),
         }
     }
 
-    pub fn lex(input: &'a str) -> Vec<Token> {
-        let mut lexer = Lexer::new(input);
+    pub fn lex(&mut self, input: &'a str) -> Vec<Token> {
+        self.chars = input.chars().peekable();
         let mut tokens = vec![];
-        while let Some(token) = lexer.next_token() {
+        while let Some(token) = self.next_token() {
             tokens.push(token);
         }
         tokens.push(Token::EOF);
