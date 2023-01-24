@@ -26,7 +26,7 @@ pub(crate) struct Parser<'a> {
 
 impl<'a> Parser<'a> {
     pub(crate) fn new() -> Parser<'a> {
-        Parser { tokens: &vec!(), pos: 0 }
+        Parser { tokens: &[], pos: 0 }
     }
 
     fn advance(&mut self) {
