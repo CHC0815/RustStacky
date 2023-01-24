@@ -1,8 +1,8 @@
 use core::panic;
 
 use crate::context::Context;
-use crate::stack_machine::{StackMachine, Entity};
 use crate::parser::Ast;
+use crate::stack_machine::{Entity, StackMachine};
 
 pub(crate) struct Interpreter {
     stack_machine: StackMachine,
@@ -40,10 +40,11 @@ impl Interpreter {
             Ast::StringLiteral(x) => {
                 let length = x.len();
                 for i in 0..length {
-                    self.stack_machine.push(Entity::Number(x.chars().nth(i).unwrap() as i32));
+                    self.stack_machine
+                        .push(Entity::Number(x.chars().nth(i).unwrap() as i32));
                 }
                 self.stack_machine.push(Entity::Number(length as i32));
-            },
+            }
             Ast::If { if_body, else_body } => {
                 let condition = self.stack_machine.pop();
                 match condition {
@@ -53,7 +54,7 @@ impl Interpreter {
                         } else {
                             self.interpret(&Ast::Expressions(else_body.to_vec()), context);
                         }
-                    },
+                    }
                     Some(_) => panic!("Cannot use non Number value as condition"),
                     None => panic!("No conditional value for if"),
                 }

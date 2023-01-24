@@ -1,8 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::{stacky::Stacky};
-
-    
+    use crate::stacky::Stacky;
 
     #[test]
     fn add() {

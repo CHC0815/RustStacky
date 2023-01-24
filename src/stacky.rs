@@ -1,4 +1,8 @@
-use crate::{lexer::{Lexer, Token}, parser::{Parser, Ast}, interpreter::Interpreter};
+use crate::{
+    interpreter::Interpreter,
+    lexer::{Lexer, Token},
+    parser::{Ast, Parser},
+};
 
 pub(crate) struct Stacky<'a> {
     lexer: Lexer<'a>,
