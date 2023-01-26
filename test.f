@@ -1,2 +1,1 @@
-:Test 1 2 + .;
-Testl
+1 2 < IF "TRUE" ELSE "FALSE" THEN PUTS

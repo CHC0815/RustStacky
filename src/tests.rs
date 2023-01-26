@@ -43,4 +43,36 @@ mod tests {
         stacky.run(&ast, &mut output);
 
     }
+
+    #[test]
+    fn if_test_true() {
+        let input = "1 1 = IF \"TRUE\" ELSE \"FALSE\" THEN PUTS";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "TRUE"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+    #[test]
+    fn if_test_false() {
+        let input = "1 2 = IF \"TRUE\" ELSE \"FALSE\" THEN PUTS";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "FALSE"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
+
+
 }
