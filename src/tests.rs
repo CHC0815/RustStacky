@@ -103,6 +103,51 @@ mod tests {
         };
     }
 
+        #[test]
+    fn lte_equals() {
+        let input = "2 2 <= .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "1"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
+    #[test]
+    fn lte_less() {
+        let input = "1 2 <= .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "1"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
+    #[test]
+    fn lte_false() {
+        let input = "3 2 <= .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "0"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
     #[test]
     fn gt() {
         let input = "3 2 > .";
