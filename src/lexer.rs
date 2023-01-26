@@ -49,6 +49,7 @@ impl<'a> Lexer<'a> {
 
     pub fn lex(&mut self, input: &'a str) -> Vec<Token> {
         self.chars = input.chars().peekable();
+
         let mut tokens = vec![];
         while let Some(token) = self.next_token() {
             tokens.push(token);
@@ -90,7 +91,7 @@ impl<'a> Lexer<'a> {
                 '.' => return Some(Token::Emit),
                 ':' => return Some(Token::Colon),
                 ';' => return Some(Token::SemiColon),
-                _ => {},
+                _ => {}
             }
         }
 
@@ -185,5 +186,4 @@ impl<'a> Lexer<'a> {
         }
         Token::Eq
     }
-
 }

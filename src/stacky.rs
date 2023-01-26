@@ -1,4 +1,10 @@
-use crate::{lexer::{Lexer, Token}, parser::{Parser, Ast}, interpreter::Interpreter};
+use std::io::Write;
+
+use crate::{
+    interpreter::Interpreter,
+    lexer::{Lexer, Token},
+    parser::{Ast, Parser},
+};
 
 pub(crate) struct Stacky<'a> {
     lexer: Lexer<'a>,
@@ -23,7 +29,7 @@ impl<'a> Stacky<'a> {
         self.parser.parse(tokens)
     }
 
-    pub(crate) fn run(&mut self, ast: &Ast) {
-        self.interpreter.run(ast);
+    pub(crate) fn run(&mut self, ast: &Ast, output: &mut impl Write) {
+        self.interpreter.run(ast, output);
     }
 }
