@@ -2,3 +2,4 @@
 /bin
 coverage.info
 /debug
+/test_data
