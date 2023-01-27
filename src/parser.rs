@@ -1,6 +1,6 @@
 use core::panic;
 
-use crate::lexer::{is_keyword, Token};
+use crate::lexer::Token;
 
 #[derive(Debug, PartialEq, Clone)]
 pub(crate) enum Ast {
