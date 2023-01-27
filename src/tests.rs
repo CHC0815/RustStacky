@@ -101,7 +101,6 @@ mod tests {
         let tokens = stacky.lex(&input);
         let ast = stacky.parse(&tokens);
         stacky.run(&ast, &mut output);
-
     }
 
     #[test]
@@ -163,7 +162,7 @@ mod tests {
         };
     }
 
-        #[test]
+    #[test]
     fn lte_equals() {
         let input = "2 2 <= .";
         let mut output: Vec<u8> = Vec::new();
@@ -284,7 +283,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic (expected = "Expected identifier")]
+    #[should_panic(expected = "Expected identifier")]
     fn expected_identifier() {
         let input = ": 1 2 + ;";
         let mut output: Vec<u8> = Vec::new();
