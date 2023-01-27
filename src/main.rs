@@ -13,7 +13,7 @@ fn main() {
     let emit_ast = true;
 
     // read file input as text and print it
-    let text = read_to_string("test.f").unwrap();
+    let text = read_to_string("test_data/test.f").unwrap();
     let mut stacky = stacky::Stacky::new();
 
     let tokens = stacky.lex(&text);
