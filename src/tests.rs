@@ -223,4 +223,16 @@ mod tests {
         };
     }
 
+    #[test]
+    #[should_panic (expected = "Expected identifier")]
+    fn expected_identifier() {
+        let input = ": 1 2 + ;";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+    }
+    
+
 }

@@ -82,7 +82,7 @@ impl StackMachine {
                 let b = self.pop();
                 match (a, b) {
                     (Some(Entity::Number(a)), Some(Entity::Number(b))) => {
-                        if a <= b {
+                        if a >= b {
                             self.push(Entity::Number(1));
                         } else {
                             self.push(Entity::Number(0));
