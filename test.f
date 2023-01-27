@@ -1,1 +1,1 @@
-1 2 < IF "TRUE" ELSE "FALSE" THEN PUTS
+:DUP 1 2 + .;

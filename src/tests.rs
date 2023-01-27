@@ -233,6 +233,17 @@ mod tests {
         let ast = stacky.parse(&tokens);
         stacky.run(&ast, &mut output);
     }
+
+    #[test]
+    #[should_panic (expected = "Cannot use keyword as identifier")]
+    fn cannot_use_keyword_as_identifier() {
+        let input = ":IF 1 2 + ;";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+    }
     
 
 }

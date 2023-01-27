@@ -31,11 +31,6 @@ pub(crate) enum Token {
     EOF,
 }
 
-pub(crate) fn is_keyword(word: &str) -> bool {
-    let keywords = vec!["IF", "ELSE", "THEN", "LOOP", "DO"];
-    keywords.contains(&word)
-}
-
 pub(crate) struct Lexer<'a> {
     chars: Peekable<Chars<'a>>,
 }

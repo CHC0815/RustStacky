@@ -111,10 +111,8 @@ impl<'a> Parser<'a> {
         let mut body = vec![];
         let mut name: String = "undefined".to_string();
         let mut token = self.tokens[self.pos].clone();
+        println!("{:#?}", token);
         if let Token::Identifier(ref x) = token {
-            if is_keyword(x) {
-                panic!("Cannot use keyword as identifier");
-            }
             name.clone_from(&x);
         } else {
             panic!("Expected identifier");
