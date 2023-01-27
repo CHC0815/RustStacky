@@ -222,8 +222,8 @@ impl StackMachine {
                 let b = self.pop();
                 match (a, b) {
                     (Some(a), Some(b)) => {
-                        self.push(a);
                         self.push(b);
+                        self.push(a);
                     }
                     _ => panic!("Not enough items on stack to swap"),
                 }
