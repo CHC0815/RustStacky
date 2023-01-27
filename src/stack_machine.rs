@@ -177,7 +177,7 @@ impl StackMachine {
                         panic!("Cannot divide by zero");
                     }
                     (Some(Entity::Number(a)), Some(Entity::Number(b))) => {
-                        self.push(Entity::Number(a / b));
+                        self.push(Entity::Number(b / a));
                     }
                     (Some(a), Some(b)) => panic!("Cannot divide non-numbers {:?} {:?}", a, b),
                     _ => panic!("Not enough items on stack to divide"),

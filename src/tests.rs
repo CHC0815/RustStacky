@@ -48,6 +48,36 @@ mod tests {
     }
 
     #[test]
+    fn div() {
+        let input = "4 2 / .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "2"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
+    #[test]
+    fn div_not_integer() {
+        let input = "3 2 / .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "1"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
+
+    #[test]
     fn word() {
         let input = ":Test 1 2 + . ; Test";
         let mut output: Vec<u8> = Vec::new();
