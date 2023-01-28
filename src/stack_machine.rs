@@ -17,7 +17,10 @@ pub(crate) struct StackMachine {
 
 impl StackMachine {
     pub(crate) fn new() -> Self {
-        Self { stack: Vec::new(), loop_stack: Vec::new() }
+        Self {
+            stack: Vec::new(),
+            loop_stack: Vec::new(),
+        }
     }
     pub(crate) fn push(&mut self, entity: Entity) {
         self.stack.push(entity);
@@ -35,8 +38,10 @@ impl StackMachine {
         self.loop_stack.push(number);
     }
 
-    pub(crate) fn get_loop(&mut self, index: i32) -> Option<i32>{
-        self.loop_stack.get(self.loop_stack.len() + index as usize).cloned()
+    pub(crate) fn get_loop(&mut self, index: i32) -> Option<i32> {
+        self.loop_stack
+            .get(self.loop_stack.len() + index as usize)
+            .cloned()
     }
 
     pub(crate) fn _get(&mut self, pointer: u32) -> Option<Entity> {

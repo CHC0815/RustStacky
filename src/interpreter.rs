@@ -63,7 +63,7 @@ impl Interpreter {
             Ast::Loop { body } => {
                 self.prepare_loop();
                 self.execute_loop(body, context, output);
-            },
+            }
         }
     }
     fn prepare_loop(&mut self) {
@@ -94,7 +94,7 @@ impl Interpreter {
                     }
                     self.interpret(&Ast::Expressions(body.to_vec()), context, output);
                     self.stack_machine.push_loop(l);
-                    self.stack_machine.push_loop(i+1);
+                    self.stack_machine.push_loop(i + 1);
                 }
                 (Some(_), None) => panic!("No limit value for loop"),
                 (None, Some(_)) => panic!("No index value for loop"),
