@@ -60,6 +60,46 @@ impl Interpreter {
                     None => panic!("No conditional value for if"),
                 }
             }
+            Ast::Loop { body } => {
+                self.prepare_loop();
+                self.execute_loop(body, context, output);
+            },
+        }
+    }
+    fn prepare_loop(&mut self) {
+        let index = self.stack_machine.pop();
+        let limit = self.stack_machine.pop();
+
+        match (index, limit) {
+            (Some(Entity::Number(i)), Some(Entity::Number(l))) => {
+                self.stack_machine.push_loop(l);
+                self.stack_machine.push_loop(i);
+            }
+            (Some(_), Some(_)) => panic!("Cannot use non Number value as index or limit"),
+            (Some(_), None) => panic!("No limit value for loop"),
+            (None, Some(_)) => panic!("No index value for loop"),
+            (None, None) => panic!("No index and limit value for loop"),
+        }
+    }
+
+    fn execute_loop(&mut self, body: &Vec<Ast>, context: &mut Context, output: &mut impl Write) {
+        loop {
+            let index = self.stack_machine.pop_loop();
+            let limit = self.stack_machine.pop_loop();
+
+            match (index, limit) {
+                (Some(i), Some(l)) => {
+                    if i >= l {
+                        return;
+                    }
+                    self.interpret(&Ast::Expressions(body.to_vec()), context, output);
+                    self.stack_machine.push_loop(l);
+                    self.stack_machine.push_loop(i+1);
+                }
+                (Some(_), None) => panic!("No limit value for loop"),
+                (None, Some(_)) => panic!("No index value for loop"),
+                (None, None) => panic!("No index and limit value for loop"),
+            }
         }
     }
 }

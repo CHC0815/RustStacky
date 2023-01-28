@@ -17,6 +17,9 @@ pub(crate) enum Ast {
         if_body: Vec<Ast>,
         else_body: Vec<Ast>,
     },
+    Loop {
+        body: Vec<Ast>,
+    },
 }
 
 pub(crate) struct Parser<'a> {
@@ -78,11 +81,25 @@ impl<'a> Parser<'a> {
             Token::Identifier(ref x) => Ast::FunctionCall(x.clone()),
             Token::Colon => self.get_word(),
             Token::If => self.get_if(),
+            Token::Do => self.get_loop(),
             Token::SemiColon => {
                 panic!("Unexpected semicolon")
             }
             _ => panic!("Not yet implemented {:?}", token),
         }
+    }
+
+    fn get_loop(&mut self) -> Ast {
+        let mut body = vec![];
+
+        let mut token = self.tokens[self.pos].clone();
+        while token != Token::Loop {
+            body.push(self.get_node(token.clone()));
+            token.clone_from(&self.tokens[self.pos]);
+        }
+        self.advance(); // advance past loop
+
+        Ast::Loop { body: body }
     }
 
     fn get_if(&mut self) -> Ast {
