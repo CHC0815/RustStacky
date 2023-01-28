@@ -43,9 +43,7 @@ impl StackMachine {
         if overflow {
             return None;
         }
-        self.loop_stack
-            .get(res)
-            .cloned()
+        self.loop_stack.get(res).cloned()
     }
 
     pub(crate) fn _get(&mut self, pointer: u32) -> Option<Entity> {

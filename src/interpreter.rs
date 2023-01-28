@@ -69,10 +69,10 @@ impl Interpreter {
                 match value {
                     Some(v) => {
                         self.stack_machine.push(Entity::Number(v));
-                    },
+                    }
                     None => panic!("No loop-counter {:?}", x),
                 }
-            },
+            }
         }
     }
     fn prepare_loop(&mut self) {
