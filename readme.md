@@ -2,10 +2,10 @@
 
 ## Implemented
 
-- [x] Built-in functions: DUB, SWAP, DROP, PUTS
-- [x] Words
-- [x] If-Else-Then
-- [x] Do-Loops
+- [x] [Built-in functions](#basic-functions): DUB, SWAP, DROP, PUTS
+- [x] [Words](#word)
+- [x] [If-Else-Then](#if)
+- [x] [Do-Loops](#loop)
 
 ## Explanation
 
