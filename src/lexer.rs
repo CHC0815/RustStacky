@@ -6,6 +6,7 @@ pub(crate) enum Token {
     Number(i32),
     StringLiteral(String),
     Identifier(String),
+    LoopVariable(u8),
     Add,
     Sub,
     Mul,
@@ -144,6 +145,11 @@ impl<'a> Lexer<'a> {
             "DO" => return Token::Do,
             "LOOP" => return Token::Loop,
             "PUTS" => return Token::Puts,
+            "I" => return Token::LoopVariable(0),
+            "J" => return Token::LoopVariable(1),
+            "K" => return Token::LoopVariable(2),
+            "L" => return Token::LoopVariable(3),
+            "M" => return Token::LoopVariable(4),
             _ => {}
         }
         Token::Identifier(identifier)

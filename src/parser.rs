@@ -20,6 +20,7 @@ pub(crate) enum Ast {
     Loop {
         body: Vec<Ast>,
     },
+    LoopVariable(u8),
 }
 
 pub(crate) struct Parser<'a> {
@@ -82,6 +83,7 @@ impl<'a> Parser<'a> {
             Token::Colon => self.get_word(),
             Token::If => self.get_if(),
             Token::Do => self.get_loop(),
+            Token::LoopVariable(ref x) => Ast::LoopVariable(x.clone()),
             Token::SemiColon => {
                 panic!("Unexpected semicolon")
             }

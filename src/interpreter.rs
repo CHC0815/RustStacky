@@ -64,6 +64,15 @@ impl Interpreter {
                 self.prepare_loop();
                 self.execute_loop(body, context, output);
             }
+            Ast::LoopVariable(ref x) => {
+                let value = self.stack_machine.get_loop(2 * x.clone() as usize);
+                match value {
+                    Some(v) => {
+                        self.stack_machine.push(Entity::Number(v));
+                    },
+                    None => panic!("No loop-counter {:?}", x),
+                }
+            },
         }
     }
     fn prepare_loop(&mut self) {
@@ -84,8 +93,8 @@ impl Interpreter {
 
     fn execute_loop(&mut self, body: &Vec<Ast>, context: &mut Context, output: &mut impl Write) {
         loop {
-            let index = self.stack_machine.pop_loop();
-            let limit = self.stack_machine.pop_loop();
+            let index = self.stack_machine.get_loop(0);
+            let limit = self.stack_machine.get_loop(1);
 
             match (index, limit) {
                 (Some(i), Some(l)) => {
@@ -93,7 +102,7 @@ impl Interpreter {
                         return;
                     }
                     self.interpret(&Ast::Expressions(body.to_vec()), context, output);
-                    self.stack_machine.push_loop(l);
+                    self.stack_machine.pop_loop();
                     self.stack_machine.push_loop(i + 1);
                 }
                 (Some(_), None) => panic!("No limit value for loop"),

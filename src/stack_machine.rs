@@ -38,9 +38,13 @@ impl StackMachine {
         self.loop_stack.push(number);
     }
 
-    pub(crate) fn get_loop(&mut self, index: i32) -> Option<i32> {
+    pub(crate) fn get_loop(&mut self, index: usize) -> Option<i32> {
+        let (res, overflow) = self.loop_stack.len().overflowing_sub(index + 1);
+        if overflow {
+            return None;
+        }
         self.loop_stack
-            .get(self.loop_stack.len() + index as usize)
+            .get(res)
             .cloned()
     }
 
