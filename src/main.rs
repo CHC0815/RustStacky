@@ -6,7 +6,10 @@ mod stack_machine;
 mod stacky;
 mod tests;
 
-use std::{fs::{File, read_to_string}, io::Write};
+use std::{
+    fs::{read_to_string, File},
+    io::Write,
+};
 
 fn main() {
     let emit_tokens = true;
