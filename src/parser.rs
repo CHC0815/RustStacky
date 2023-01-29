@@ -153,7 +153,7 @@ impl<'a> Parser<'a> {
     fn get_arrow(&mut self) -> Ast {
         if let Token::Identifier(ref x) = self.tokens[self.pos].clone() {
             self.advance(); // advance past the identifier
-            return Ast::SetVariable(x.clone())
+            return Ast::SetVariable(x.clone());
         }
         panic!("Expected identifier after ->");
     }
@@ -161,7 +161,7 @@ impl<'a> Parser<'a> {
     fn get_at(&mut self) -> Ast {
         if let Token::Identifier(ref x) = self.tokens[self.pos].clone() {
             self.advance(); // advance past the identifier
-            return Ast::GetVariable(x.clone())
+            return Ast::GetVariable(x.clone());
         }
         panic!("Expected identifier after @");
     }

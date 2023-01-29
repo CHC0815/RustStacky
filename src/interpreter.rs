@@ -32,14 +32,19 @@ impl Interpreter {
                 }
             }
             Ast::WordDefinition { name, body } => {
-                context.set(name.clone(), Variable::Function { body: body.to_vec() });
+                context.set(
+                    name.clone(),
+                    Variable::Function {
+                        body: body.to_vec(),
+                    },
+                );
             }
             Ast::FunctionCall(ref name) => {
                 let var = context.get(name.clone());
                 match var {
                     Variable::Function { body } => {
                         self.interpret(&Ast::Expressions(body), context, output);
-                    },
+                    }
                     Variable::Variable(ref x) => {
                         self.stack_machine.push(x.clone());
                     }
@@ -85,19 +90,21 @@ impl Interpreter {
                 match value {
                     Some(v) => {
                         context.set(x.clone(), Variable::Variable(v));
-                    },
+                    }
                     None => panic!("Not enough items on the stack for variable assignment"),
                 }
-            },
+            }
             Ast::GetVariable(ref x) => {
                 let variable = context.get(x.clone());
                 match variable {
-                    Variable::Function { body: _ } => panic!("Cannot get the content of a function"),
+                    Variable::Function { body: _ } => {
+                        panic!("Cannot get the content of a function")
+                    }
                     Variable::Variable(ref x) => {
                         self.stack_machine.push(x.clone());
-                    },
+                    }
                 }
-            },
+            }
         }
     }
     fn prepare_loop(&mut self) {

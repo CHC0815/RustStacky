@@ -4,8 +4,8 @@ use crate::{parser::Ast, stack_machine::Entity};
 
 #[derive(Debug, Clone)]
 pub(crate) enum Variable {
-    Function {body: Vec<Ast>},
-    Variable (Entity),
+    Function { body: Vec<Ast> },
+    Variable(Entity),
 }
 
 #[derive(Debug, Clone)]
