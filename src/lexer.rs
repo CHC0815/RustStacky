@@ -31,6 +31,7 @@ pub(crate) enum Token {
     Puts,
     EOF,
     Arrow,
+    At,
 }
 
 pub(crate) struct Lexer<'a> {
@@ -97,6 +98,7 @@ impl<'a> Lexer<'a> {
                 '.' => return Some(Token::Emit),
                 ':' => return Some(Token::Colon),
                 ';' => return Some(Token::SemiColon),
+                '@' => return Some(Token::At),
                 _ => {}
             }
         }

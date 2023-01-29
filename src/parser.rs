@@ -21,6 +21,8 @@ pub(crate) enum Ast {
         body: Vec<Ast>,
     },
     LoopVariable(u8),
+    SetVariable(String),
+    GetVariable(String),
 }
 
 pub(crate) struct Parser<'a> {
@@ -84,6 +86,8 @@ impl<'a> Parser<'a> {
             Token::If => self.get_if(),
             Token::Do => self.get_loop(),
             Token::LoopVariable(ref x) => Ast::LoopVariable(x.clone()),
+            Token::Arrow => self.get_arrow(),
+            Token::At => self.get_at(),
             Token::SemiColon => {
                 panic!("Unexpected semicolon")
             }
@@ -144,5 +148,21 @@ impl<'a> Parser<'a> {
         }
         self.advance(); // advance past semicolon
         Ast::WordDefinition { name, body }
+    }
+
+    fn get_arrow(&mut self) -> Ast {
+        if let Token::Identifier(ref x) = self.tokens[self.pos].clone() {
+            self.advance(); // advance past the identifier
+            return Ast::SetVariable(x.clone())
+        }
+        panic!("Expected identifier after ->");
+    }
+
+    fn get_at(&mut self) -> Ast {
+        if let Token::Identifier(ref x) = self.tokens[self.pos].clone() {
+            self.advance(); // advance past the identifier
+            return Ast::GetVariable(x.clone())
+        }
+        panic!("Expected identifier after @");
     }
 }

@@ -1,7 +1,7 @@
 use core::panic;
 use std::io::Write;
 
-use crate::context::Context;
+use crate::context::{Context, Variable};
 use crate::parser::Ast;
 use crate::stack_machine::{Entity, StackMachine};
 
@@ -32,11 +32,18 @@ impl Interpreter {
                 }
             }
             Ast::WordDefinition { name, body } => {
-                context.set(name.clone(), body.to_vec());
+                context.set(name.clone(), Variable::Function { body: body.to_vec() });
             }
             Ast::FunctionCall(ref name) => {
-                let body = context.get(name.clone());
-                self.interpret(&Ast::Expressions(body), context, output);
+                let var = context.get(name.clone());
+                match var {
+                    Variable::Function { body } => {
+                        self.interpret(&Ast::Expressions(body), context, output);
+                    },
+                    Variable::Variable(ref x) => {
+                        self.stack_machine.push(x.clone());
+                    }
+                }
             }
             Ast::StringLiteral(x) => {
                 let length = x.len();
@@ -73,6 +80,24 @@ impl Interpreter {
                     None => panic!("No loop-counter {:?}", x),
                 }
             }
+            Ast::SetVariable(ref x) => {
+                let value = self.stack_machine.pop();
+                match value {
+                    Some(v) => {
+                        context.set(x.clone(), Variable::Variable(v));
+                    },
+                    None => panic!("Not enough items on the stack for variable assignment"),
+                }
+            },
+            Ast::GetVariable(ref x) => {
+                let variable = context.get(x.clone());
+                match variable {
+                    Variable::Function { body: _ } => panic!("Cannot get the content of a function"),
+                    Variable::Variable(ref x) => {
+                        self.stack_machine.push(x.clone());
+                    },
+                }
+            },
         }
     }
     fn prepare_loop(&mut self) {
