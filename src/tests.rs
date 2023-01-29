@@ -367,4 +367,19 @@ mod tests {
             Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
         };
     }
+
+    #[test]
+    fn negative_number() {
+        let input = "10 -1 + .";
+        let mut output: Vec<u8> = Vec::new();
+        let mut stacky = Stacky::new();
+        let tokens = stacky.lex(&input);
+        let ast = stacky.parse(&tokens);
+        stacky.run(&ast, &mut output);
+
+        let _s = match String::from_utf8(output) {
+            Ok(v) => assert!(v == "9"),
+            Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+        };
+    }
 }

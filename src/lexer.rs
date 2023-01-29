@@ -30,6 +30,7 @@ pub(crate) enum Token {
     SemiColon,
     Puts,
     EOF,
+    Arrow,
 }
 
 pub(crate) struct Lexer<'a> {
@@ -54,6 +55,15 @@ impl<'a> Lexer<'a> {
         tokens
     }
 
+    fn require_whitespace(&mut self) {
+        if let Some(&c) = self.chars.peek() {
+            if !c.is_whitespace() {
+                panic!("Expected whitespace");
+            }
+        }
+        self.chars.next(); // consume whitespace
+    }
+
     fn next_token(&mut self) -> Option<Token> {
         while let Some(&c) = self.chars.peek() {
             if c.is_whitespace() {
@@ -62,7 +72,7 @@ impl<'a> Lexer<'a> {
             }
 
             if c.is_numeric() {
-                return Some(self.number());
+                return Some(self.number(false));
             }
 
             if c.is_ascii_alphabetic() {
@@ -74,6 +84,7 @@ impl<'a> Lexer<'a> {
                 '>' => return Some(self.greater_than()),
                 '<' => return Some(self.less_than()),
                 '=' => return Some(self.equal()),
+                '-' => return Some(self.sub()),
                 _ => {}
             }
 
@@ -81,7 +92,6 @@ impl<'a> Lexer<'a> {
             self.chars.next();
             match c {
                 '+' => return Some(Token::Add),
-                '-' => return Some(Token::Sub),
                 '*' => return Some(Token::Mul),
                 '/' => return Some(Token::Div),
                 '.' => return Some(Token::Emit),
@@ -94,7 +104,7 @@ impl<'a> Lexer<'a> {
         None
     }
 
-    fn number(&mut self) -> Token {
+    fn number(&mut self, is_negative: bool) -> Token {
         let mut number = String::default();
         while let Some(&c) = self.chars.peek() {
             if c.is_numeric() {
@@ -105,7 +115,12 @@ impl<'a> Lexer<'a> {
             }
         }
 
-        Token::Number(number.parse().unwrap())
+        let num = number.parse().unwrap();
+
+        if is_negative {
+            return Token::Number(num * -1);
+        }
+        Token::Number(num)
     }
 
     fn string(&mut self) -> Token {
@@ -120,6 +135,7 @@ impl<'a> Lexer<'a> {
                 self.chars.next();
             }
         }
+        self.require_whitespace();
         Token::StringLiteral(string)
     }
 
@@ -133,6 +149,8 @@ impl<'a> Lexer<'a> {
                 break;
             }
         }
+
+        self.require_whitespace();
 
         // check if the identifier is a keyword
         match identifier.as_str() {
@@ -186,5 +204,18 @@ impl<'a> Lexer<'a> {
             }
         }
         Token::Eq
+    }
+
+    fn sub(&mut self) -> Token {
+        self.chars.next(); // consume the initial -
+        if let Some(&c) = self.chars.peek() {
+            if c == '>' {
+                self.chars.next(); // consume the >
+                return Token::Arrow;
+            } else if c.is_numeric() {
+                return self.number(true);
+            }
+        }
+        Token::Sub
     }
 }
