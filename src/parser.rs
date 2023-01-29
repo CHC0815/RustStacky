@@ -80,6 +80,7 @@ impl<'a> Parser<'a> {
             Token::Gt => Ast::Operation(Token::Gt),
             Token::Lte => Ast::Operation(Token::Lte),
             Token::Gte => Ast::Operation(Token::Gte),
+            Token::Percent => Ast::Operation(Token::Percent),
             Token::StringLiteral(ref x) => Ast::StringLiteral(x.clone()),
             Token::Identifier(ref x) => Ast::FunctionCall(x.clone()),
             Token::Colon => self.get_word(),

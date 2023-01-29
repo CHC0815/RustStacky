@@ -193,11 +193,25 @@ impl StackMachine {
                 let a = self.pop();
                 let b = self.pop();
                 match (a, b) {
-                    (Some(Entity::Number(_)), Some(Entity::Number(0))) => {
+                    (Some(Entity::Number(0)), Some(Entity::Number(_))) => {
                         panic!("Cannot divide by zero");
                     }
                     (Some(Entity::Number(a)), Some(Entity::Number(b))) => {
                         self.push(Entity::Number(b / a));
+                    }
+                    (Some(a), Some(b)) => panic!("Cannot divide non-numbers {:?} {:?}", a, b),
+                    _ => panic!("Not enough items on stack to divide"),
+                }
+            }
+            Token::Percent => {
+                let a = self.pop();
+                let b = self.pop();
+                match (a, b) {
+                    (Some(Entity::Number(0)), Some(Entity::Number(_))) => {
+                        panic!("Modulo by zero is undefined");
+                    }
+                    (Some(Entity::Number(a)), Some(Entity::Number(b))) => {
+                        self.push(Entity::Number(b % a));
                     }
                     (Some(a), Some(b)) => panic!("Cannot divide non-numbers {:?} {:?}", a, b),
                     _ => panic!("Not enough items on stack to divide"),

@@ -25,6 +25,7 @@ pub(crate) enum Token {
     Lte,
     Gte,
     Eq,
+    Percent,
     DoubleEq,
     Colon,
     SemiColon,
@@ -99,6 +100,7 @@ impl<'a> Lexer<'a> {
                 ':' => return Some(Token::Colon),
                 ';' => return Some(Token::SemiColon),
                 '@' => return Some(Token::At),
+                '%' => return Some(Token::Percent),
                 _ => {}
             }
         }
